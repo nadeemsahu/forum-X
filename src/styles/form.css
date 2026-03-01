@@ -1,0 +1,111 @@
+.post-form-container {
+    margin-top: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    width: 100%;
+    animation: fadeUp 0.3s ease-out;
+}
+
+.post-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 16px 20px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    resize: vertical;
+    transition: all var(--transition-fast);
+    box-sizing: border-box;
+    font-weight: 400;
+}
+
+.post-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px var(--accent-soft);
+    background-color: var(--card-bg);
+}
+
+.post-form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.char-counter {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.btn-submit {
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    padding: 8px 24px;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+    opacity: 0.9;
+}
+
+.btn-submit:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.btn-submit:disabled {
+    background-color: var(--border-strong);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 14px;
+    transition: all var(--transition-fast);
+}
+
+.btn-cancel:hover {
+    background-color: var(--border-soft);
+    color: var(--text-primary);
+}
+
+/* Minimal Skeleton Loader */
+.skeleton-box {
+    background: linear-gradient(-90deg, var(--border-soft) 0%, var(--border-strong) 50%, var(--border-soft) 100%);
+    background-size: 400% 400%;
+    animation: shimmer 1.2s ease-in-out infinite;
+    border-radius: var(--radius-md);
+    opacity: 0.7;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0%;
+    }
+
+    100% {
+        background-position: -200% 0%;
+    }
+}
