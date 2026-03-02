@@ -9,8 +9,8 @@ const renderMarkdown = (text) => {
     return <div dangerouslySetInnerHTML={{ __html: html }} />;
 };
 
-const PostForm = ({ onSubmit, onCancel, placeholder = "What are your thoughts? Use **bold**, `code`, or > quotes." }) => {
-    const [text, setText] = useState('');
+const PostForm = ({ onSubmit, onCancel, placeholder = "What are your thoughts? Use **bold**, `code`, or > quotes.", initialText = '' }) => {
+    const [text, setText] = useState(initialText);
     const MAX_CHARS = 300;
 
     const handleChange = (e) => {

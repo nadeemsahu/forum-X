@@ -316,12 +316,24 @@ export const getThreads = async (categoryId = null) => {
 
 export const getThreadData = async (threadId) => {
     await delay();
-    const ths = JSON.parse(localStorage.getItem(KEYS.THREADS));
-    const td = ths.find(t => t.id === threadId);
-    const posts = JSON.parse(localStorage.getItem(KEYS.POSTS));
-    const pd = posts[threadId] || null;
+    try {
+        const rawThreads = localStorage.getItem(KEYS.THREADS);
+        const ths = rawThreads ? JSON.parse(rawThreads) : [];
+        const td = Array.isArray(ths) ? (ths.find(t => t.id === threadId) || null) : null;
 
-    return { thread: td, post: pd };
+        const rawPosts = localStorage.getItem(KEYS.POSTS);
+        const posts = rawPosts ? JSON.parse(rawPosts) : {};
+        const pd = (posts && typeof posts === 'object') ? (posts[threadId] || null) : null;
+
+        if (pd && !Array.isArray(pd.replies)) {
+            pd.replies = [];
+        }
+
+        return { thread: td, post: pd };
+    } catch (e) {
+        console.error("Error fetching thread data safely:", e);
+        return { thread: null, post: null };
+    }
 };
 
 export const createThread = async (userId, username, categoryId, title, text) => {
@@ -426,11 +438,19 @@ export const addReply = async (threadId, targetPostId, username, text, notifyUse
 
 // --- VIEWS ---
 export const incrementThreadView = async (threadId) => {
-    const ths = JSON.parse(localStorage.getItem(KEYS.THREADS)) || [];
-    const td = ths.find(t => t.id === threadId);
-    if (td) {
-        td.views = (td.views || 0) + 1;
-        localStorage.setItem(KEYS.THREADS, JSON.stringify(ths));
+    try {
+        const rawThreads = localStorage.getItem(KEYS.THREADS);
+        if (!rawThreads) return;
+        const ths = JSON.parse(rawThreads);
+        if (!Array.isArray(ths)) return;
+
+        const td = ths.find(t => t.id === threadId);
+        if (td) {
+            td.views = (td.views || 0) + 1;
+            localStorage.setItem(KEYS.THREADS, JSON.stringify(ths));
+        }
+    } catch (e) {
+        console.error("Error incrementing thread views safely:", e);
     }
 };
 

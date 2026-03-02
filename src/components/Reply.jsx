@@ -4,6 +4,7 @@ import PostForm from './PostForm';
 import { useAuth } from '../context/AuthContext';
 import { toggleLike, getUserLikeStatus } from '../utils/localStorageDb';
 import ConfirmationModal from './ConfirmationModal';
+import { formatTime } from '../utils/formatTime';
 
 // Extremely simple pseudo-markdown parser simulating a live rich text format
 const renderMarkdown = (text) => {
@@ -85,6 +86,8 @@ const Reply = memo(({ reply, onReplyAdd, threadId }) => {
         reply.text = newText;
         if (user?.role === 'admin') reply.isEditedByAdmin = true;
     };
+
+    if (!reply) return null;
 
     const avatarColors = ['#ef4444', '#f97316', '#84cc16', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'];
     const safeAuthor = reply.author || 'Unknown';
@@ -175,11 +178,11 @@ const Reply = memo(({ reply, onReplyAdd, threadId }) => {
                 </div>
             </div>
 
-            {!isCollapsed && reply.replies && reply.replies.length > 0 && (
+            {!isCollapsed && Array.isArray(reply.replies) && reply.replies.length > 0 && (
                 <div className="nested-replies">
                     {reply.replies.map(childReply => (
                         <Reply
-                            key={childReply.id}
+                            key={childReply?.id || Math.random()}
                             reply={childReply}
                             onReplyAdd={onReplyAdd}
                             threadId={threadId}

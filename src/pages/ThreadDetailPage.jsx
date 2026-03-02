@@ -120,9 +120,10 @@ const ThreadDetailPage = () => {
 
     if (!threadData || !postData) {
         return (
-            <div className="content-area">
-                <h1 className="page-title">Thread not found</h1>
-                <Link to="/" className="btn-action" style={{ display: 'inline-block' }}>Go Home</Link>
+            <div className="content-area" style={{ textAlign: 'center', marginTop: '10vh' }}>
+                <h1 className="page-title" style={{ fontSize: '32px', color: 'var(--text-primary)', marginBottom: '16px' }}>Thread not found or deleted</h1>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>The discussion you are trying to view no longer exists.</p>
+                <Link to="/" className="btn-action" style={{ display: 'inline-flex', padding: '12px 24px' }}>Return to Overview</Link>
             </div>
         );
     }
@@ -132,10 +133,11 @@ const ThreadDetailPage = () => {
     const charCode = (safeAuthor.charCodeAt(0) || 0) + (safeAuthor.charCodeAt(1) || 0) || 0;
     const color = avatarColors[charCode % avatarColors.length];
     const initials = safeAuthor.slice(0, 2).toUpperCase();
+    const safeReplies = Array.isArray(postData?.replies) ? postData.replies : [];
 
     return (
         <div className="content-area">
-            <Link to={`/category/${threadData.categoryId}`} className="btn-action" style={{ marginBottom: 'var(--spacing-xl)', display: 'inline-flex' }}>
+            <Link to={`/category/${threadData.categoryId || 'general'}`} className="btn-action" style={{ marginBottom: 'var(--spacing-xl)', display: 'inline-flex' }}>
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Back to Threads
             </Link>
@@ -160,7 +162,7 @@ const ThreadDetailPage = () => {
                         <span style={{ fontSize: 'var(--font-size-md)' }}>{formatTime(postData.timestamp)}</span>
                         {(postData.isEditedByAdmin || postData.text !== postData.originalText) && <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontStyle: 'italic', marginLeft: '6px' }}>(Edited)</span>}
                     </div>
-                    <h1 className="post-title" style={{ fontSize: '36px' }}>{threadData.title}</h1>
+                    <h1 className="post-title" style={{ fontSize: '36px' }}>{threadData?.title || 'Untitled Thread'}</h1>
 
                     {isEditingMain ? (
                         <div style={{ marginBottom: 'var(--spacing-lg)' }}>
@@ -223,10 +225,10 @@ const ThreadDetailPage = () => {
             </div>
 
             <div className="replies-section">
-                {postData.replies && postData.replies.map(reply => (
-                    <Reply key={reply.id} reply={reply} onReplyAdd={handleReplyAdd} threadId={threadId} />
+                {safeReplies.map(reply => (
+                    <Reply key={reply?.id || Math.random()} reply={reply} onReplyAdd={handleReplyAdd} threadId={threadId} />
                 ))}
-                {(!postData.replies || postData.replies.length === 0) && (
+                {safeReplies.length === 0 && (
                     <div style={{ textAlign: 'center', padding: 'var(--spacing-xxxl)', color: 'var(--text-secondary)' }}>
                         <svg style={{ margin: '0 auto var(--spacing-md)' }} width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                         <p style={{ fontSize: 'var(--font-size-lg)', fontWeight: '500' }}>No comments yet.</p>
